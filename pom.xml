@@ -27,13 +27,14 @@
     </licenses>
 
     <properties>
+        <env.JAVA_1_8_HOME>/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home</env.JAVA_1_8_HOME>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <aws.lambda.java.core.version>1.1.0</aws.lambda.java.core.version>
         <aws.sdk.version>2.0.0-preview-11</aws.sdk.version>
         <dynamodblocal.version>1.11.119</dynamodblocal.version>
-        <lombok.version>1.18.2</lombok.version>
+        <lombok.version>1.18.26</lombok.version>
         <dagger.version>2.16</dagger.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.0.2-beta</mockito.version>
@@ -168,6 +169,7 @@
                     </annotationProcessorPaths>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <executable>${env.JAVA_1_8_HOME}/bin/javac</executable>
                 </configuration>
             </plugin>
             <plugin>
@@ -315,46 +317,46 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>${docker.maven.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>prepare-it-database</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <configuration>
-                            <images>
-                                <image>
-                                    <name>amazon/dynamodb-local:${dynamodblocal.version}</name>
-                                    <alias>it-database</alias>
-                                    <run>
-                                        <ports>
-                                            <port>8000:8000</port>
-                                        </ports>
-                                        <wait>
-                                            <http>
-                                                <url>http://localhost:8000/shell/</url>
-                                            </http>
-                                            <time>5000</time>
-                                        </wait>
-                                    </run>
-                                </image>
-                            </images>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>remove-it-database</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>io.fabric8</groupId>-->
+<!--                <artifactId>docker-maven-plugin</artifactId>-->
+<!--                <version>${docker.maven.plugin.version}</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>prepare-it-database</id>-->
+<!--                        <phase>pre-integration-test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>start</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <images>-->
+<!--                                <image>-->
+<!--                                    <name>amazon/dynamodb-local:${dynamodblocal.version}</name>-->
+<!--                                    <alias>it-database</alias>-->
+<!--                                    <run>-->
+<!--                                        <ports>-->
+<!--                                            <port>8000:8000</port>-->
+<!--                                        </ports>-->
+<!--                                        <wait>-->
+<!--                                            <http>-->
+<!--                                                <url>http://localhost:8000/shell/</url>-->
+<!--                                            </http>-->
+<!--                                            <time>5000</time>-->
+<!--                                        </wait>-->
+<!--                                    </run>-->
+<!--                                </image>-->
+<!--                            </images>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>remove-it-database</id>-->
+<!--                        <phase>post-integration-test</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>stop</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
     <reporting>
