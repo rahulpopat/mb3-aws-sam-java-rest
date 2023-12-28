@@ -1,0 +1,131 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    sam-app
+
+    Sample SAM Template for sam-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+    Function:
+        Timeout: 20
+        MemorySize: 512
+        Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+          Variables:
+            TABLE_NAME: "BookingTable"
+#            TABLE_NAME: !Ref BookingsTable
+            ENDPOINT_OVERRIDE: ""
+
+Resources:
+  GetBookingFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+#      CodeUri: target/mb3-aws-sam-java-rest-1.0.0.jar
+      Handler: com.amazonaws.handler.GetBookingHandler::handleRequest
+      Runtime: java8
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        GetBooking:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bookings/{booking_id}
+            Method: get
+  GetBookingsFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+#      CodeUri: target/mb3-aws-sam-java-rest-1.0.0.jar
+      Handler: com.amazonaws.handler.GetBookingsHandler::handleRequest
+      Runtime: java8
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        GetBookings:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bookings
+            Method: get
+  UpdateBookingFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+#      CodeUri: target/mb3-aws-sam-java-rest-1.0.0.jar
+      Handler: com.amazonaws.handler.UpdateBookingHandler::handleRequest
+      Runtime: java8
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        UpdateBooking:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bookings/{booking_id}
+            Method: post
+  DeleteBookingFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+#      CodeUri: target/mb3-aws-sam-java-rest-1.0.0.jar
+      Handler: com.amazonaws.handler.DeleteBookingHandler::handleRequest
+      Runtime: java8
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        DeleteBooking:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bookings/{booking_id}
+            Method: delete
+  CreateBookingFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: ./
+#      CodeUri: target/mb3-aws-sam-java-rest-1.0.0.jar
+      Handler: com.amazonaws.handler.CreateBookingHandler::handleRequest
+      Runtime: java8
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        CreateBooking:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /bookings
+            Method: post
+
+#  BookingsTable:
+#    Type: AWS::DynamoDB::Table
+#    Properties:
+#      TableName: bookings_table
+#      AttributeDefinitions:
+#        - AttributeName: bookingId
+#          AttributeType: S
+#      KeySchema:
+#        - AttributeName: bookingId
+#          KeyType: HASH
+#      BillingMode: PAY_PER_REQUEST
+
+Outputs:
+    HelloWorldApi:
+      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
+    GetBookingFunction:
+      Description: "GetBooking Lambda Function ARN"
+      Value: !GetAtt GetBookingFunction.Arn
+
+    GetBookingsFunction:
+      Description: "GetBookings Lambda Function ARN"
+      Value: !GetAtt GetBookingsFunction.Arn
+
+    UpdateBookingFunction:
+      Description: "UpdateBooking Lambda Function ARN"
+      Value: !GetAtt UpdateBookingFunction.Arn
+
+    DeleteBookingFunction:
+      Description: "DeleteBooking Lambda Function ARN"
+      Value: !GetAtt DeleteBookingFunction.Arn
+
+    CreateBookingFunction:
+      Description: "CreateBooking Lambda Function ARN"
+      Value: !GetAtt CreateBookingFunction.Arn
